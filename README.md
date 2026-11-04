@@ -9,6 +9,17 @@ Community fork of the open-source [WebCatalog](https://github.com/webcatalog/web
 
 **Status:** see the `phase*` branches. This project is not affiliated with, endorsed by, or sponsored by WebCatalog Ltd. "WebCatalog" is a trademark of its respective owner.
 
+## Engine source and offline behavior
+
+Apps are generated from the WebCatalog engine ("Neutron"). The app keeps a local copy and remembers the last version it saw, so creating and updating apps keeps working offline or if the engine server disappears. The first install on a machine does need network access.
+
+The locations can be overridden (for example to use your own mirror) with environment variables:
+
+| Variable | Default | Serves |
+|---|---|---|
+| `WEBCATALOG_OPEN_ENGINE_VERSIONS_URL` | `https://cdn-1.webcatalog.io/neutron/versions` | `stable.json`, `beta.json` |
+| `WEBCATALOG_OPEN_ENGINE_RELEASES_URL` | `https://github.com/webcatalog/webcatalog-engine/releases/download` | `<tag>/template-<platform>-<arch>.json` |
+
 ## Introduction
 |macOS|
 |---|

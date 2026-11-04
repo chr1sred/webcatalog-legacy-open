@@ -26,6 +26,7 @@ const {
   getPreference,
   getPreferences,
 } = require('./libs/preferences');
+const { getVersionsBaseUrl } = require('./libs/engine-config');
 
 const { createMenu } = require('./libs/menu');
 const sendToAllWindows = require('./libs/send-to-all-windows');
@@ -77,6 +78,7 @@ if (!gotTheLock) {
     } = getPreferences();
 
     global.useSystemTitleBar = useSystemTitleBar;
+    global.engineVersionsBaseUrl = getVersionsBaseUrl();
 
     nativeTheme.themeSource = themeSource;
 

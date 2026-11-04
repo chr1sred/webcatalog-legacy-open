@@ -3,6 +3,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 import semver from 'semver';
 
+import getStaticGlobal from '../../helpers/get-static-global';
+
 import {
   UPDATE_FETCHING_LATEST_TEMPLATE_VERSION,
   UPDATE_INSTALLATION_PROGRESS,
@@ -50,6 +52,7 @@ export const updateInstallationProgress = (progress) => ({
 
 export const fetchLatestTemplateVersionAsync = () => (dispatch, getState) => {
   const { allowPrerelease } = getState().preferences;
+  const versionsBaseUrl = getStaticGlobal('engineVersionsBaseUrl');
   dispatch(updateFetchingLatestTemplateVersion(true));
   return Promise.resolve()
     .then(() => new Promise((resolve) => setTimeout(resolve, 1000)))
@@ -64,10 +67,10 @@ export const fetchLatestTemplateVersionAsync = () => (dispatch, getState) => {
             let stableVersion;
             let prereleaseVersion;
             const p = [
-              window.fetch('https://cdn-1.webcatalog.io/neutron/versions/stable.json')
+              window.fetch(`${versionsBaseUrl}/stable.json`)
                 .then((res) => res.json())
                 .then((data) => { stableVersion = data.version; }),
-              window.fetch('https://cdn-1.webcatalog.io/neutron/versions/beta.json')
+              window.fetch(`${versionsBaseUrl}/beta.json`)
                 .then((res) => res.json())
                 .then((data) => { prereleaseVersion = data.version; }),
             ];
@@ -81,7 +84,7 @@ export const fetchLatestTemplateVersionAsync = () => (dispatch, getState) => {
           });
       }
 
-      return window.fetch('https://cdn-1.webcatalog.io/neutron/versions/stable.json')
+      return window.fetch(`${versionsBaseUrl}/stable.json`)
         .then((res) => res.json())
         .then((data) => data.version);
     })

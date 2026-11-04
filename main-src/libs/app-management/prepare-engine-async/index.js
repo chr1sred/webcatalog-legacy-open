@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 const path = require('path');
+const fs = require('fs-extra');
 const semver = require('semver');
 const NodeCache = require('node-cache');
 const { fork } = require('child_process');
@@ -11,54 +12,81 @@ const envPaths = require('env-paths').default;
 const customizedFetch = require('../../customized-fetch');
 const sendToAllWindows = require('../../send-to-all-windows');
 const { getPreference } = require('../../preferences');
+const { getVersionsBaseUrl, getReleasesBaseUrl } = require('../../engine-config');
 
 // force re-extract for first installation after launch
 global.forceExtract = true;
 
 const cache = new NodeCache();
 
-// use in-house API
-// to avoid using GitHub API as it has rate limit (60 requests per hour)
-// https://github.com/webcatalog/webcatalog-app/issues/890
-const getTagNameAsync = () => Promise.resolve()
-  .then(() => {
-    const allowPrerelease = getPreference('allowPrerelease');
+const FETCH_TIMEOUT_MS = 10000;
 
-    // check both prerelease and stable channels
-    // return the newer version
-    if (allowPrerelease) {
-      return Promise.resolve()
-        .then(() => {
-          let stableVersion;
-          let prereleaseVersion;
-          const p = [
-            customizedFetch('https://cdn-1.webcatalog.io/neutron/versions/stable.json')
-              .then((res) => res.json())
-              .then((data) => { stableVersion = data.version; }),
-            customizedFetch('https://cdn-1.webcatalog.io/neutron/versions/beta.json')
-              .then((res) => res.json())
-              .then((data) => { prereleaseVersion = data.version; }),
-          ];
-          return Promise.all(p)
-            .then(() => {
-              if (semver.gt(stableVersion, prereleaseVersion)) {
-                return stableVersion;
-              }
-              return prereleaseVersion;
-            });
-        })
-        .then((version) => `v${version}`);
-    }
+const getCacheRoot = () => envPaths('webcatalog', { suffix: '' }).cache;
 
-    return customizedFetch('https://cdn-1.webcatalog.io/neutron/versions/stable.json')
-      .then((res) => res.json())
-      .then((data) => `v${data.version}`);
+// last versions successfully fetched, so the app keeps working if the
+// version server is unreachable (offline, server down, mirror moved...)
+const getEngineStatePath = () => path.join(app.getPath('userData'), 'engine-state.json');
+
+const readEngineState = () => {
+  try {
+    return fs.readJsonSync(getEngineStatePath());
+  } catch (err) {
+    return {};
+  }
+};
+
+const writeEngineState = (state) => {
+  try {
+    fs.writeJsonSync(getEngineStatePath(), state);
+  } catch (err) {
+    console.log(err); // eslint-disable-line no-console
+  }
+};
+
+const fetchChannelVersionAsync = (channel) => customizedFetch(
+  `${getVersionsBaseUrl()}/${channel}.json`,
+  { timeout: FETCH_TIMEOUT_MS },
+)
+  .then((res) => {
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+  })
+  .then((data) => {
+    if (!data || !semver.valid(data.version)) throw new Error('Invalid engine version response.');
+    return data.version;
   });
 
+// version of the engine already stored on this machine (see prepare-engine-forked.js)
+const getLocalEngineVersion = () => {
+  try {
+    return fs.readJsonSync(path.join(getCacheRoot(), 'webcatalog-engine', 'template-info.json')).version;
+  } catch (err) {
+    return null;
+  }
+};
+
+const getTagNameAsync = () => {
+  const allowPrerelease = getPreference('allowPrerelease');
+  const stateKey = allowPrerelease ? 'prerelease' : 'stable';
+
+  // when prerelease is allowed, check both channels and return the newer version
+  const channels = allowPrerelease ? ['stable', 'beta'] : ['stable'];
+  return Promise.all(channels.map(fetchChannelVersionAsync))
+    .then((versions) => versions.reduce((a, b) => (semver.gt(a, b) ? a : b)))
+    .then((version) => {
+      writeEngineState({ ...readEngineState(), [stateKey]: version });
+      return `v${version}`;
+    })
+    .catch((err) => {
+      console.log(err); // eslint-disable-line no-console
+      const fallbackVersion = readEngineState()[stateKey] || getLocalEngineVersion();
+      // 'local' tells the forked script to use only what is stored on this machine
+      return fallbackVersion ? `v${fallbackVersion}` : 'local';
+    });
+};
+
 const downloadExtractTemplateAsync = (tagName) => new Promise((resolve, reject) => {
-  const cacheRoot = envPaths('webcatalog', {
-    suffix: '',
-  }).cache;
+  const cacheRoot = getCacheRoot();
 
   let latestTemplateVersion = '0.0.0';
   const scriptPath = path.join(__dirname, 'prepare-engine-forked.js')
@@ -77,6 +105,8 @@ const downloadExtractTemplateAsync = (tagName) => new Promise((resolve, reject) 
     process.arch,
     '--tagName',
     tagName,
+    '--releasesBaseUrl',
+    getReleasesBaseUrl(),
   ];
 
   const cachedTemplateInfoJson = cache.get(`templateInfoJson.${tagName}`);

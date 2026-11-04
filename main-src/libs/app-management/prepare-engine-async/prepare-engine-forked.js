@@ -32,6 +32,7 @@ const {
   arch,
   platform,
   tagName,
+  releasesBaseUrl,
   templateInfoJson,
   cacheRoot,
   userDataPath,
@@ -40,6 +41,36 @@ const {
 const cachePath = path.join(cacheRoot, 'webcatalog-engine');
 const templatePath = path.join(cachePath, 'template');
 const templateZipPath = path.join(cachePath, 'template.zip');
+// info of the last engine version downloaded successfully (used when offline)
+const templateInfoPath = path.join(cachePath, 'template-info.json');
+const FETCH_TIMEOUT_MS = 15000;
+
+// true if the engine server is unreachable and we rely on the local copy
+let offline = false;
+
+const isLocalTemplateReady = (templateInfo) => {
+  const hasExtractedTemplate = fs.pathExistsSync(path.join(templatePath, 'package.json'))
+    && fs.readJsonSync(path.join(templatePath, 'package.json')).version === templateInfo.version;
+  const hasValidZip = fs.pathExistsSync(templateZipPath)
+    && hasha.fromFileSync(templateZipPath, { algorithm: 'sha256' }) === templateInfo.sha256;
+  return { hasExtractedTemplate, hasValidZip };
+};
+
+const getLocalTemplateInfo = (networkError) => {
+  const offlineError = new Error(
+    'Unable to reach the engine server and no local copy of the engine is available. '
+    + 'Please check your internet connection and try again.',
+  );
+  if (networkError) offlineError.stack = networkError.stack;
+
+  if (!fs.pathExistsSync(templateInfoPath)) throw offlineError;
+  const templateInfo = fs.readJsonSync(templateInfoPath);
+  const { hasExtractedTemplate, hasValidZip } = isLocalTemplateReady(templateInfo);
+  if (!hasExtractedTemplate && !hasValidZip) throw offlineError;
+
+  offline = true;
+  return templateInfo;
+};
 
 Promise.resolve()
   .then(() => fs.ensureDir(cachePath))
@@ -48,8 +79,23 @@ Promise.resolve()
       return JSON.parse(templateInfoJson);
     }
 
-    return fetch(`https://github.com/webcatalog/webcatalog-engine/releases/download/${tagName}/template-${platform}-${arch}.json`)
-      .then((res) => res.json());
+    if (tagName === 'local') {
+      return getLocalTemplateInfo();
+    }
+
+    return fetch(`${releasesBaseUrl}/${tagName}/template-${platform}-${arch}.json`, { timeout: FETCH_TIMEOUT_MS })
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((info) => {
+        fs.writeJsonSync(templateInfoPath, info);
+        return info;
+      })
+      .catch((err) => {
+        console.log(err); // eslint-disable-line no-console
+        return getLocalTemplateInfo(err);
+      });
   })
   .then((templateInfo) => Promise.resolve()
     .then(() => {
@@ -62,6 +108,9 @@ Promise.resolve()
       }
 
       // return shouldDownload
+      // (nothing to download if the server is unreachable)
+      if (offline) return false;
+
       if (fs.pathExistsSync(templateZipPath)) {
         // do not use hasha.fromFile as it uses worker which is incompatible with webpack setup
         const localSha256 = hasha.fromFileSync(templateZipPath, { algorithm: 'sha256' });
@@ -125,6 +174,11 @@ Promise.resolve()
     .then(() => {
       // return shouldExtract
       // extracting is expensive so try not to do it too many times
+      if (offline) {
+        // only extract if the extracted copy is missing (the zip was validated earlier)
+        return !isLocalTemplateReady(templateInfo).hasExtractedTemplate;
+      }
+
       if (process.env.FORCE_EXTRACT === 'true') { // see error handling installAppAsync for usage
         return true;
       }
