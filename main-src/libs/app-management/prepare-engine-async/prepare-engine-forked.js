@@ -61,6 +61,8 @@ const getLocalTemplateInfo = (networkError) => {
     'Unable to reach the engine server and no local copy of the engine is available. '
     + 'Please check your internet connection and try again.',
   );
+  // lets the main process show this message to the user as is
+  offlineError.name = 'EngineUnreachableError';
   if (networkError) offlineError.stack = networkError.stack;
 
   if (!fs.pathExistsSync(templateInfoPath)) throw offlineError;

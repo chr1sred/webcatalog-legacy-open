@@ -212,6 +212,8 @@ const loadListeners = () => {
             send(e.sender, 'enqueue-snackbar', error.message, 'error');
           } else if (error && error.message && error.message.startsWith('WebCatalog is outdated')) {
             send(e.sender, 'enqueue-snackbar', error.message, 'error');
+          } else if (error && error.name === 'EngineUnreachableError') {
+            send(e.sender, 'enqueue-snackbar', `Failed to install ${name}. ${error.message}`, 'error');
           } else {
             const actionData = error ? { type: 'show-details', text: error.stack } : undefined;
             send(e.sender, 'enqueue-snackbar', `Failed to install ${name}.`, 'error', actionData);
@@ -288,6 +290,8 @@ const loadListeners = () => {
                 send(e.sender, 'enqueue-snackbar', `Failed to update ${name} as the application is in use.`, 'error');
               } else if (error && error.message && error.message.startsWith('WebCatalog is outdated')) {
                 send(e.sender, 'enqueue-snackbar', error.message, 'error');
+              } else if (error && error.name === 'EngineUnreachableError') {
+                send(e.sender, 'enqueue-snackbar', `Failed to update ${name}. ${error.message}`, 'error');
               } else {
                 const actionData = error ? { type: 'show-details', text: error.stack } : undefined;
                 send(e.sender, 'enqueue-snackbar', `Failed to update ${name}.`, 'error', actionData);
