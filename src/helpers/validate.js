@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 import isUrl from './is-url';
-import isValidLicenseKey from './is-valid-license-key';
 
 const kits = {
   required: (val, ruleVal, fieldName) => {
@@ -21,12 +20,6 @@ const kits = {
   // accept link without protocol prefix
   lessStrictUrl: (val, ruleVal, fieldName) => {
     if (ruleVal && val && !isUrl(val) && !isUrl(`http://${val}`)) {
-      return '{fieldName} is not valid.'.replace('{fieldName}', fieldName);
-    }
-    return null;
-  },
-  licenseKey: (val, ruleVal, fieldName) => {
-    if (ruleVal && val && !isValidLicenseKey(val)) {
       return '{fieldName} is not valid.'.replace('{fieldName}', fieldName);
     }
     return null;

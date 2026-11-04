@@ -12,7 +12,6 @@ import dialogBackupRestore from './dialog-backup-restore/reducers';
 import dialogCatalogAppDetails from './dialog-catalog-app-details/reducers';
 import dialogCreateCustomApp from './dialog-create-custom-app/reducers';
 import dialogEditApp from './dialog-edit-app/reducers';
-import dialogLicenseRegistration from './dialog-license-registration/reducers';
 import dialogOpenSourceNotices from './dialog-open-source-notices/reducers';
 import dialogRestore from './dialog-restore/reducers';
 import dialogSetInstallationPath from './dialog-set-installation-path/reducers';
@@ -33,7 +32,6 @@ const rootReducer = combineReducers({
   dialogBackupRestore,
   dialogBackup,
   dialogRestore,
-  dialogLicenseRegistration,
   dialogOpenSourceNotices,
   dialogSetInstallationPath,
   general,

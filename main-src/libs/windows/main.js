@@ -34,7 +34,6 @@ const get = () => {
 
 const createAsync = () => new Promise((resolve) => {
   const handleTrayRightClick = () => {
-    const registered = getPreference('registered');
     const updaterEnabled = process.env.SNAP == null
       && !process.mas && !process.windowsStore;
     const updaterMenuItem = {
@@ -73,20 +72,6 @@ const createAsync = () => new Promise((resolve) => {
       },
       {
         type: 'separator',
-      },
-      {
-        label: registered ? 'WebCatalog Lifetime' : 'WebCatalog Basic',
-        visible: true,
-        enabled: false,
-        click: null,
-      },
-      {
-        label: 'Upgrade...',
-        visible: !registered,
-        click: registered ? null : () => {
-          sendToAllWindows('open-license-registration-dialog');
-          get().show();
-        },
       },
       {
         type: 'separator',

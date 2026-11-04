@@ -20,7 +20,6 @@ import Select from '@material-ui/core/Select';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import PowerIcon from '@material-ui/icons/Power';
@@ -49,7 +48,6 @@ import {
 } from '../../../senders';
 
 import DefinedAppBar from './defined-app-bar';
-import SectionLicensing from './section-licensing';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -195,11 +193,6 @@ const Preferences = () => {
   const useSystemTitleBar = useSelector((state) => state.preferences.useSystemTitleBar);
 
   const sections = {
-    licensing: {
-      text: 'Licensing',
-      Icon: CheckCircleIcon,
-      ref: useRef(),
-    },
     general: {
       text: 'General',
       Icon: WidgetsIcon,
@@ -265,13 +258,6 @@ const Preferences = () => {
           </List>
         </div>
         <div className={classes.inner}>
-          <Typography variant="subtitle2" color="textPrimary" className={classes.sectionTitle} ref={sections.licensing.ref}>
-            Licensing
-          </Typography>
-          <Paper elevation={0} className={classes.paper}>
-            <SectionLicensing />
-          </Paper>
-
           <Typography variant="subtitle2" color="textPrimary" className={classes.sectionTitle} ref={sections.general.ref}>
             General
           </Typography>

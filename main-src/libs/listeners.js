@@ -75,10 +75,6 @@ const loadListeners = () => {
 
   ipcMain.on('request-set-preference', (e, name, value) => {
     setPreference(name, value);
-
-    if (name === 'registered') {
-      createMenu();
-    }
   });
 
   // System Preferences

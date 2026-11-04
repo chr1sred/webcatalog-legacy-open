@@ -33,7 +33,6 @@ import {
   ROUTE_SPACES,
 } from '../../../constants/routes';
 
-import UpgradeButton from './upgrade-button';
 
 const useStyles = makeStyles((theme) => ({
   sidebar: {
@@ -183,7 +182,6 @@ const Home = () => {
             return listItem;
           })}
         </List>
-        <UpgradeButton />
       </div>
     </Grid>
   );

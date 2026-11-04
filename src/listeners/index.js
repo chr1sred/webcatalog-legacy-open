@@ -16,7 +16,6 @@ import { setSystemPreference } from '../state/system-preferences/actions';
 import { open as openDialogAbout } from '../state/dialog-about/actions';
 import { open as openDialogBackup } from '../state/dialog-backup/actions';
 import { open as openDialogRestore } from '../state/dialog-restore/actions';
-import { open as openDialogLicenseRegistration } from '../state/dialog-license-registration/actions';
 import { open as openDialogCatalogAppDetails } from '../state/dialog-catalog-app-details/actions';
 import { updateUpdater } from '../state/updater/actions';
 import {
@@ -68,10 +67,6 @@ const loadListeners = (store) => {
   });
 
   ipcRenderer.on('go-to-preferences', () => store.dispatch(changeRoute(ROUTE_PREFERENCES)));
-
-  ipcRenderer.on('open-license-registration-dialog', () => {
-    store.dispatch(openDialogLicenseRegistration());
-  });
 
   ipcRenderer.on('open-dialog-about', () => {
     store.dispatch(openDialogAbout());

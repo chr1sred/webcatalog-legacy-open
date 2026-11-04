@@ -16,7 +16,6 @@ import DialogEditApp from './dialogs/dialog-edit-app';
 import DialogBackupRestore from './dialogs/dialog-backup-restore';
 import DialogBackup from './dialogs/dialog-backup';
 import DialogRestore from './dialogs/dialog-restore';
-import DialogLicenseRegistration from './dialogs/dialog-license-registration';
 import DialogOpenSourceNotices from './dialogs/dialog-open-source-notices';
 import DialogSetInstallationPath from './dialogs/dialog-set-installation-path';
 import SnackbarTrigger from './root/snackbar-trigger';
@@ -80,7 +79,6 @@ const App = () => {
       <DialogBackupRestore />
       <DialogBackup />
       <DialogRestore />
-      <DialogLicenseRegistration />
       <DialogOpenSourceNotices />
       <DialogSetInstallationPath />
     </div>

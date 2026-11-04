@@ -10,7 +10,6 @@ const {
 
 const sendToAllWindows = require('./send-to-all-windows');
 
-const { getPreference } = require('./preferences');
 const formatBytes = require('./format-bytes');
 
 const mainWindow = require('./windows/main');
@@ -18,7 +17,6 @@ const mainWindow = require('./windows/main');
 let menu;
 
 const createMenu = () => {
-  const registered = getPreference('registered');
 
   const updaterMenuItem = {
     label: 'Check for Updates',
@@ -56,17 +54,6 @@ const createMenu = () => {
           click: () => sendToAllWindows('open-dialog-about'),
         },
         { type: 'separator' },
-        {
-          label: registered ? 'WebCatalog Lifetime' : 'WebCatalog Basic',
-          visible: true,
-          enabled: false,
-          click: null,
-        },
-        {
-          label: 'Upgrade...',
-          visible: !registered,
-          click: registered ? null : () => sendToAllWindows('open-license-registration-dialog'),
-        },
         {
           type: 'separator',
         },
