@@ -47,7 +47,7 @@ const Preferences = () => {
       <div className={classes.scrollContainer}>
         <div className={classes.descriptionContainer}>
           <Typography variant="body1" color="textSecondary">
-            With WebCatalog Spaces, you can organize your apps into
+            With Spaces, you can organize your apps into
             separate distraction-free environments.
             <br />
             Create spaces for friends and family, or split between work and play.

@@ -50,7 +50,7 @@ const createMenu = () => {
       label: app.name,
       submenu: [
         {
-          label: 'About WebCatalog',
+          label: 'About WebCatalog Open',
           click: () => sendToAllWindows('open-dialog-about'),
         },
         { type: 'separator' },
@@ -173,7 +173,7 @@ const createMenu = () => {
       role: 'help',
       submenu: [
         {
-          label: 'WebCatalog Help',
+          label: 'WebCatalog Open Help',
           click: () => shell.openExternal('https://docs.webcatalog.io?utm_source=webcatalog_app'),
         },
         {

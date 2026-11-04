@@ -44,8 +44,8 @@ export const save = () => (dispatch, getState) => {
 
   if (appCount > 0) {
     dialog.showMessageBox(getCurrentWindow(), {
-      title: 'Uninstall all of WebCatalog apps first',
-      message: 'You need to uninstall all of your WebCatalog apps before changing this preference.',
+      title: 'Uninstall all of your apps first',
+      message: 'You need to uninstall all of your apps before changing this preference.',
       buttons: ['OK'],
       cancelId: 0,
       defaultId: 0,

@@ -479,7 +479,7 @@ const AppCard = ({
           <HelpTooltip
             title={(
               <Typography variant="body2" color="textPrimary">
-                {`Apps powered by ${getEngineName(engine)} are no longer supported by WebCatalog. Click to learn more.`}
+                {`Apps powered by ${getEngineName(engine)} are no longer supported by WebCatalog Open. Click to learn more.`}
               </Typography>
             )}
           >

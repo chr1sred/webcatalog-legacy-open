@@ -57,14 +57,14 @@ const createAsync = () => new Promise((resolve) => {
 
     const trayContextMenu = Menu.buildFromTemplate([
       {
-        label: 'Open WebCatalog',
+        label: 'Open WebCatalog Open',
         click: () => get().show(),
       },
       {
         type: 'separator',
       },
       {
-        label: 'About WebCatalog',
+        label: 'About WebCatalog Open',
         click: () => {
           sendToAllWindows('open-dialog-about');
           get().show();
@@ -130,7 +130,7 @@ const createAsync = () => new Promise((resolve) => {
       index: REACT_PATH,
       tray,
       preloadWindow: true,
-      tooltip: 'WebCatalog',
+      tooltip: 'WebCatalog Open',
       browserWindow: {
         alwaysOnTop: getPreference('alwaysOnTop'),
         x: menubarWindowState.x,

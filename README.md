@@ -1,7 +1,13 @@
-# WebCatalog [![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](LICENSE)
+# webcatalog-open [![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](LICENSE)
 
-## Archived
-This repository is archived. To help us better improve the product and protect our intellectual assets, WebCatalog app's development has been moved to a closed source code base.
+Community fork of the open-source [WebCatalog](https://github.com/webcatalog/webcatalog-app) legacy code (MPL 2.0).
+
+**Goals**
+- All features unlocked: no license keys, no paywalls, no app limit.
+- No dependency on the official WebCatalog services (telemetry, tracking, CDN, engine).
+- Modernized toolchain (Electron, React, build system).
+
+**Status:** see the `phase*` branches. This project is not affiliated with, endorsed by, or sponsored by WebCatalog Ltd. "WebCatalog" is a trademark of its respective owner.
 
 ## Introduction
 |macOS|

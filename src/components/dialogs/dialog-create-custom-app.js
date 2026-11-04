@@ -233,7 +233,7 @@ const DialogCreateCustomApp = () => {
               disabled={Boolean(!url || urlError || urlDisabled || downloadingIcon)}
               onClick={() => dispatch(getIconFromAppSearch())}
             >
-              {downloadingIcon ? 'Downloading...' : 'Download Icon from WebCatalog'}
+              {downloadingIcon ? 'Downloading...' : 'Download Icon from Catalog'}
             </Button>
             <br />
             <Button

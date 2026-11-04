@@ -134,7 +134,7 @@ export const getIconFromAppSearch = () => (dispatch, getState) => {
 
       if (!iconUrl) {
         return dialog.showMessageBox(getCurrentWindow(), {
-          message: 'Unable to find a suitable icon from WebCatalog\'s database.',
+          message: 'Unable to find a suitable icon from the catalog.',
           buttons: ['OK'],
           cancelId: 0,
           defaultId: 0,

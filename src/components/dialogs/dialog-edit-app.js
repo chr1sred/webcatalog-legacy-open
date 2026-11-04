@@ -180,7 +180,7 @@ const DialogEditApp = () => {
                 variant="body2"
                 className={classnames(classes.caption, classes.captionDisabled)}
               >
-                This app icon is managed by WebCatalog and is not editable. To customize the icon,
+                This app icon is managed by WebCatalog Open and is not editable. To customize the icon,
                 {` clone "${name}".`}
               </Typography>
             </Grid>
@@ -229,7 +229,7 @@ const DialogEditApp = () => {
                 disabled={Boolean(!url || urlError || urlDisabled || downloadingIcon)}
                 onClick={() => dispatch(getIconFromAppSearch())}
               >
-                {downloadingIcon ? 'Downloading...' : 'Download Icon from WebCatalog'}
+                {downloadingIcon ? 'Downloading...' : 'Download Icon from Catalog'}
               </Button>
               <br />
               <Button

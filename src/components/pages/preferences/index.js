@@ -383,8 +383,8 @@ const Preferences = () => {
 
                     if (appCount > 0) {
                       dialog.showMessageBox(getCurrentWindow(), {
-                        title: 'Uninstall all of WebCatalog apps first',
-                        message: 'You need to uninstall all of your WebCatalog apps before changing this preference.',
+                        title: 'Uninstall all of your apps first',
+                        message: 'You need to uninstall all of your apps before changing this preference.',
                         buttons: ['OK'],
                         cancelId: 0,
                         defaultId: 0,
@@ -659,7 +659,7 @@ const Preferences = () => {
               <ListItem>
                 <ListItemText
                   primary="Receive beta updates"
-                  secondary="Try pre-release versions of WebCatalog, and test drive our new features."
+                  secondary="Try pre-release versions of WebCatalog Open, and test drive new features."
                 />
                 <ListItemSecondaryAction>
                   <Switch
