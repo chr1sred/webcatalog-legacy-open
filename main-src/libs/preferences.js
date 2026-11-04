@@ -34,13 +34,10 @@ const defaultPreferences = {
   createStartMenuShortcut: true,
   defaultHome: 'home',
   installationPath: getDefaultInstallationPath(),
-  privacyConsentAsked: false,
   // all features are unlocked (kept for compatibility with generated apps)
   registered: true,
   requireAdmin: false,
-  sentry: false,
   sortInstalledAppBy: 'last-updated',
-  telemetry: false,
   themeSource: 'system',
   trayIcon: false,
   useHardwareAcceleration: true,
@@ -56,15 +53,14 @@ let cachedPreferences = null;
 const updateSharedPreferencesAsync = () => {
   if (cachedPreferences == null) return Promise.resolve();
   // shared-preferences.json includes:
-  // telemetry & sentry pref
-  // so that privacy consent prefs
-  // can be shared across WebCatalog and WebCatalog-Engine-based apps
+  // shared-preferences.json is read by WebCatalog-Engine-based apps.
+  // Telemetry and crash reporting do not exist in this fork: always disabled.
   const dotWebCatalogPath = path.join(app.getPath('home'), '.webcatalog');
   const sharedPreferencesPath = path.join(app.getPath('home'), '.webcatalog', 'shared-preferences.json');
   return fs.ensureDir(dotWebCatalogPath)
     .then(() => fs.writeJSON(sharedPreferencesPath, {
-      telemetry: cachedPreferences.telemetry,
-      sentry: cachedPreferences.sentry,
+      telemetry: false,
+      sentry: false,
     }));
 };
 
@@ -103,9 +99,6 @@ const setPreference = (name, value) => {
     nativeTheme.themeSource = value;
   }
 
-  if (name === 'telemetry' || name === 'sentry') {
-    updateSharedPreferencesAsync();
-  }
 };
 
 const getPreference = (name) => {

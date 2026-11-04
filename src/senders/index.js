@@ -3,10 +3,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 import { ipcRenderer } from 'electron';
 
-import amplitude from '../amplitude';
-
-import { trackInstallAsync } from '../api/functions';
-
 export const enqueueRequestRestartSnackbar = () => ipcRenderer.emit('enqueue-request-restart-snackbar');
 
 export const requestOpenInBrowser = (url) => ipcRenderer.send('request-open-in-browser', url);
@@ -31,51 +27,17 @@ export const requestSetSystemPreference = (name, value) => ipcRenderer.send('req
 // App Management
 export const requestGetInstalledApps = () => ipcRenderer.send('request-get-installed-apps');
 export const requestInstallApp = (id, name, url, icon, opts, applyIconTemplate) => {
-  // only log engine & app type to protect privacy
-  amplitude.getInstance().logEvent('install app', {
-    multisiteApp: url == null,
-  });
-
-  // only track installs for apps in the catalog
-  if (!id.startsWith('custom-')) {
-    trackInstallAsync(amplitude.getInstance().options.deviceId, id);
-  }
-
   ipcRenderer.send('request-install-app', id, name, url, icon, opts, applyIconTemplate);
 };
 export const requestInstallAppWithIconData = (id, name, url, iconFilename, iconData, opts) => {
-  // only log engine & app type to protect privacy
-  amplitude.getInstance().logEvent('restore app', {
-    multisiteApp: url == null,
-  });
-
-  // only track installs for apps in the catalog
-  if (!id.startsWith('custom-')) {
-    trackInstallAsync(amplitude.getInstance().options.deviceId, id);
-  }
-
   ipcRenderer.send('request-install-app-with-icon-data', id, name, url, iconFilename, iconData, opts);
 };
 export const requestUpdateApp = (id, name, url, icon, opts, applyIconTemplate) => {
-  // only log engine & app type to protect privacy
-  amplitude.getInstance().logEvent('update app', {
-    multisiteApp: url == null,
-  });
-
-  // only track installs for apps in the catalog
-  if (!id.startsWith('custom-')) {
-    trackInstallAsync(amplitude.getInstance().options.deviceId, id);
-  }
-
   ipcRenderer.send('request-update-app', id, name, url, icon, opts, applyIconTemplate);
 };
 export const requestCancelInstallApp = (id) => ipcRenderer.send('request-cancel-install-app', id);
 export const requestCancelUpdateApp = (id) => ipcRenderer.send('request-cancel-update-app', id);
 export const requestUninstallApp = (id, name, engine) => {
-  // only log engine o protect privacy
-  amplitude.getInstance().logEvent('uninstall app', {
-    engine,
-  });
   ipcRenderer.send('request-uninstall-app', id, name, engine);
 };
 export const requestOpenApp = (id, name) => ipcRenderer.send('request-open-app', id, name);

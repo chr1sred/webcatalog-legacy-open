@@ -8,7 +8,6 @@ const { app } = require('electron');
 const tmp = require('tmp');
 const ws = require('windows-shortcuts');
 const fsExtra = require('fs-extra');
-const { captureException, addBreadcrumb } = require('@sentry/electron');
 const envPaths = require('env-paths').default;
 
 const { getPreferences } = require('../../preferences');
@@ -110,17 +109,6 @@ const installAppAsync = (
         tmp.dirSync().name,
       );
 
-      addBreadcrumb({
-        category: 'run-forked-script',
-        message: 'install-app-async',
-        // avoid sending app name, app id to protect user privacy
-        data: {
-          engine: 'electron',
-          cacheRoot,
-          installationPath,
-          requireAdmin,
-        },
-      });
 
       const scriptPath = path.join(__dirname, scriptFileName)
         .replace('app.asar', 'app.asar.unpacked');
@@ -201,7 +189,6 @@ const installAppAsync = (
             .catch((e) => {
               // eslint-disable-next-line no-console
               console.log(e);
-              captureException(e);
             }),
         );
 

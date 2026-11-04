@@ -5,14 +5,12 @@ require('source-map-support').install();
 const path = require('path');
 const {
   app,
-  dialog,
   ipcMain,
   nativeTheme,
   protocol,
 } = require('electron');
 const fs = require('fs');
 const electronRemote = require('@electron/remote/main');
-const Sentry = require('@sentry/electron/main');
 
 const settings = require('electron-settings');
 
@@ -27,22 +25,7 @@ electronRemote.initialize();
 const {
   getPreference,
   getPreferences,
-  setPreference,
 } = require('./libs/preferences');
-
-const sentryEnabled = process.env.NODE_ENV === 'production' && getPreference('sentry');
-if (sentryEnabled) {
-  // https://github.com/getsentry/sentry-electron/blob/06c9874584f7734fe6cb8297c6455cf6356d29d4/MIGRATION.md
-  Sentry.init({
-    dsn: process.env.ELECTRON_APP_SENTRY_DSN,
-    release: app.getVersion(),
-    autoSessionTracking: false,
-    // disable native crash reporting
-    // as it mostly reports Electron's bugs (upstream bugs)
-    integrations: (defaultIntegrations) => defaultIntegrations
-      .filter((i) => i.name !== Sentry.Integrations.SentryMinidump.Id),
-  });
-}
 
 const { createMenu } = require('./libs/menu');
 const sendToAllWindows = require('./libs/send-to-all-windows');
@@ -90,12 +73,10 @@ if (!gotTheLock) {
     const {
       allowPrerelease,
       themeSource,
-      privacyConsentAsked,
       useSystemTitleBar,
     } = getPreferences();
 
     global.useSystemTitleBar = useSystemTitleBar;
-    global.sentryEnabled = sentryEnabled;
 
     nativeTheme.themeSource = themeSource;
 
@@ -104,35 +85,6 @@ if (!gotTheLock) {
         // trigger whenFullyReady
         ipcMain.emit('truly-ready');
 
-        const win = mainWindow.get();
-        mainWindow.get().on('focus', () => {
-          win.send('log-focus');
-        });
-
-        if (!privacyConsentAsked) {
-          // wait for 5s before showing this
-          // the window needs some time to focus
-          // https://github.com/webcatalog/webcatalog-app/issues/1461
-          setTimeout(() => {
-            dialog.showMessageBox(mainWindow.get(), {
-              type: 'question',
-              buttons: ['Allow', 'Don\'t Allow'],
-              message: 'Can we collect anonymous usage statistics and crash reports?',
-              detail: 'The data helps us improve and optimize the product. You can change your decision at any time in the app’s preferences.',
-              cancelId: 1,
-              defaultId: 0,
-            }).then(({ response }) => {
-              setPreference('privacyConsentAsked', true);
-              if (response === 0) {
-                setPreference('sentry', true);
-                setPreference('telemetry', true);
-              } else {
-                setPreference('sentry', false);
-                setPreference('telemetry', false);
-              }
-            }).catch(console.log); // eslint-disable-line
-          }, 5000);
-        }
       });
 
     createMenu();

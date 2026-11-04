@@ -5,7 +5,6 @@ const path = require('path');
 const { fork } = require('child_process');
 const { app } = require('electron');
 const envPaths = require('env-paths').default;
-const { addBreadcrumb } = require('@sentry/electron');
 
 const sendToAllWindows = require('../../send-to-all-windows');
 
@@ -29,13 +28,6 @@ const prepareElectronAsync = () => new Promise((resolve, reject) => {
     process.arch,
   ];
 
-  addBreadcrumb({
-    category: 'run-forked-script',
-    message: 'prepare-electron-async',
-    data: {
-      cacheRoot,
-    },
-  });
 
   const child = fork(scriptPath, args, {
     env: {

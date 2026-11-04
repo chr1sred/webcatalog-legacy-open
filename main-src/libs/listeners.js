@@ -12,7 +12,6 @@ const fs = require('fs');
 const { autoUpdater } = require('electron-updater');
 const tmp = require('tmp');
 
-const { captureException } = require('@sentry/electron');
 
 const sendToAllWindows = require('./send-to-all-windows');
 const getWebsiteIconUrlAsync = require('./get-website-icon-url-async');
@@ -147,7 +146,6 @@ const loadListeners = () => {
             if (error && error.message && (error.message.startsWith('EBUSY') || error.message === 'Application is in use.')) {
               send(e.sender, 'enqueue-snackbar', `Failed to uninstall ${name} as the application is in use.`, 'error');
             } else {
-              captureException(error);
               const actionData = error ? { type: 'show-details', text: error.stack } : undefined;
               send(e.sender, 'enqueue-snackbar', `Failed to uninstall ${name}.`, 'error', actionData);
             }
@@ -215,7 +213,6 @@ const loadListeners = () => {
           } else if (error && error.message && error.message.startsWith('WebCatalog is outdated')) {
             send(e.sender, 'enqueue-snackbar', error.message, 'error');
           } else {
-            captureException(error);
             const actionData = error ? { type: 'show-details', text: error.stack } : undefined;
             send(e.sender, 'enqueue-snackbar', `Failed to install ${name}.`, 'error', actionData);
           }
@@ -306,7 +303,6 @@ const loadListeners = () => {
               } else {
                 const actionData = error ? { type: 'show-details', text: error.stack } : undefined;
                 send(e.sender, 'enqueue-snackbar', `Failed to update ${name}.`, 'error', actionData);
-                captureException(error);
               }
               send(e.sender, 'set-app', id, {
                 status: 'INSTALLED',

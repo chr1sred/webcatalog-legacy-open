@@ -7,7 +7,6 @@
 const { app } = require('electron');
 const AutoLaunch = require('auto-launch');
 const settings = require('electron-settings');
-const { captureException } = require('@sentry/electron');
 
 const sendToAllWindows = require('./send-to-all-windows');
 
@@ -28,7 +27,8 @@ const checkAutoLauncherStatusAsync = () => {
         sendToAllWindows('set-system-preference', 'openAtLogin', 'no');
       })
       .catch((err) => {
-        captureException(err);
+        // eslint-disable-next-line no-console
+        console.log(err);
         sendToAllWindows('set-system-preference', 'openAtLogin', 'no');
       });
   }
@@ -96,7 +96,7 @@ const setSystemPreference = (name, value) => {
             }
             return null;
           })
-          .catch((err) => captureException(err))
+          .catch((err) => console.log(err)) // eslint-disable-line no-console
           .then(() => {
             checkAutoLauncherStatusAsync();
           });

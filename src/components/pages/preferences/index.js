@@ -183,8 +183,6 @@ const Preferences = () => {
   const installingAppCount = useSelector((state) => getInstallingAppsAsList(state).length);
   const openAtLogin = useSelector((state) => state.systemPreferences.openAtLogin);
   const requireAdmin = useSelector((state) => state.preferences.requireAdmin);
-  const sentry = useSelector((state) => state.preferences.sentry);
-  const telemetry = useSelector((state) => state.preferences.telemetry);
   const themeSource = useSelector((state) => state.preferences.themeSource);
   const trayIcon = useSelector((state) => state.preferences.trayIcon);
   const updaterInfo = useSelector((state) => state.updater.info);
@@ -201,11 +199,6 @@ const Preferences = () => {
     appManagement: {
       text: 'App Management',
       Icon: OfflinePinIcon,
-      ref: useRef(),
-    },
-    privacy: {
-      text: 'Privacy & Security',
-      Icon: SecurityIcon,
       ref: useRef(),
     },
     advanced: {
@@ -521,53 +514,6 @@ const Preferences = () => {
                   primary="Backup and restore apps & spaces (experimental)"
                   secondary="This feature is under development and might contain bugs."
                 />
-                <ChevronRightIcon color="action" />
-              </ListItem>
-            </List>
-          </Paper>
-
-          <Typography variant="subtitle2" color="textPrimary" className={classes.sectionTitle} ref={sections.privacy.ref}>
-            Privacy &amp; Security
-          </Typography>
-          <Paper elevation={0} className={classes.paper}>
-            <List disablePadding dense>
-              <ListItem>
-                <ListItemText
-                  primary="Allow the app to send anonymous crash reports"
-                  secondary="Help us quickly diagnose and fix bugs in the app."
-                />
-                <ListItemSecondaryAction>
-                  <Switch
-                    edge="end"
-                    color="primary"
-                    checked={sentry}
-                    onChange={(e) => {
-                      requestSetPreference('sentry', e.target.checked);
-                    }}
-                  />
-                </ListItemSecondaryAction>
-              </ListItem>
-              <Divider />
-              <ListItem>
-                <ListItemText
-                  primary="Allow the app to send anonymous usage data"
-                  secondary="Help us understand how to improve the product."
-                />
-                <ListItemSecondaryAction>
-                  <Switch
-                    edge="end"
-                    color="primary"
-                    checked={telemetry}
-                    onChange={(e) => {
-                      requestSetPreference('telemetry', e.target.checked);
-                      enqueueRequestRestartSnackbar();
-                    }}
-                  />
-                </ListItemSecondaryAction>
-              </ListItem>
-              <Divider />
-              <ListItem button onClick={() => requestOpenInBrowser('https://webcatalog.io/privacy/?utm_source=webcatalog_app')}>
-                <ListItemText primary="Privacy Policy" />
                 <ChevronRightIcon color="action" />
               </ListItem>
             </List>

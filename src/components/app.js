@@ -6,7 +6,6 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 
-import TelemetryManager from './root/telemetry-manager';
 import Container from './root/container';
 
 import DialogAbout from './dialogs/dialog-about';
@@ -70,7 +69,6 @@ const App = () => {
       </div>
 
       <SnackbarTrigger />
-      <TelemetryManager />
 
       <DialogAbout />
       <DialogCatalogAppDetails />

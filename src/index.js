@@ -8,10 +8,6 @@ import { Provider } from 'react-redux';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 
-import getStaticGlobal from './helpers/get-static-global';
-
-import './amplitude';
-
 import './index.css';
 
 import store from './state';
@@ -20,17 +16,6 @@ import store from './state';
 import loadListeners from './listeners';
 
 import AppWrapper from './components/app-wrapper';
-
-if (getStaticGlobal('sentryEnabled')) {
-  import('@sentry/electron/renderer')
-    .then((Sentry) => {
-      Sentry.init({});
-    })
-    .catch((err) => {
-      // eslint-disable-next-line no-console
-      console.log(err);
-    });
-}
 
 loadListeners(store);
 
