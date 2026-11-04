@@ -43,7 +43,6 @@ import { isOutdatedApp } from '../../state/app-management/utils';
 import { installApp, updateApp } from '../../state/app-management/actions';
 import { open as openDialogCreateCustomApp } from '../../state/dialog-create-custom-app/actions';
 import { open as openDialogEditApp } from '../../state/dialog-edit-app/actions';
-import { open as openDialogCatalogAppDetails } from '../../state/dialog-catalog-app-details/actions';
 
 import InstallationProgress from './installation-progress';
 
@@ -265,20 +264,6 @@ const AppCard = ({
       },
       {
         type: 'separator',
-        visible: !inDetailsDialog,
-      },
-      {
-        label: 'View Details',
-        visible: !inDetailsDialog,
-        click: () => dispatch(openDialogCatalogAppDetails(id)),
-      },
-      {
-        type: 'separator',
-      },
-      {
-        label: 'What\'s New',
-        visible: engine === 'electron',
-        click: () => requestOpenInBrowser('https://webcatalog.io/webcatalog/changelog/neutron/?utm_source=webcatalog_app'),
       },
       !engine || engine === 'electron' ? {
         label: `Version ${version}${isOutdated ? ` (Latest: ${latestTemplateVersion})` : ''}`,
@@ -429,11 +414,9 @@ const AppCard = ({
           inDetailsDialog && classes.cardFrameless,
         )}
         onClick={clickable ? () => {
-          if (simple) {
+          if (status === INSTALLED) {
             requestOpenApp(id, name);
-            return;
           }
-          dispatch(openDialogCatalogAppDetails(id));
         } : null}
         onContextMenu={() => {
           showMenu();

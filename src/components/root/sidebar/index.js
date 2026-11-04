@@ -7,7 +7,6 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
 
-import '@elastic/react-search-ui-views/lib/styles/styles.css';
 
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
@@ -17,17 +16,17 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Badge from '@material-ui/core/Badge';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import AppsIcon from '@material-ui/icons/Apps';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import OfflinePinIcon from '@material-ui/icons/OfflinePin';
 import SettingsIcon from '@material-ui/icons/Settings';
 
 import SpaceIcon from '../../shared/space-icon';
 
 import { changeRoute } from '../../../state/router/actions';
+import { open as openDialogCreateCustomApp } from '../../../state/dialog-create-custom-app/actions';
 import { getAppBadgeCount } from '../../../state/app-management/utils';
 
 import {
-  ROUTE_HOME,
   ROUTE_INSTALLED,
   ROUTE_PREFERENCES,
   ROUTE_SPACES,
@@ -82,9 +81,9 @@ const Home = () => {
   const showTooltip = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
   const mainSections = {
-    all: {
-      text: 'Catalog',
-      Icon: AppsIcon,
+    newApp: {
+      text: 'New App',
+      Icon: AddCircleOutlineIcon,
     },
     spaces: {
       text: 'Spaces',
@@ -120,10 +119,6 @@ const Home = () => {
                 return route === ROUTE_PREFERENCES;
               }
 
-              if (sectionKey === 'all') {
-                return route === ROUTE_HOME;
-              }
-
               if (sectionKey === 'spaces') {
                 return route === ROUTE_SPACES;
               }
@@ -136,8 +131,8 @@ const Home = () => {
                 button
                 key={sectionKey}
                 onClick={() => {
-                  if (sectionKey === 'all') {
-                    dispatch(changeRoute(ROUTE_HOME));
+                  if (sectionKey === 'newApp') {
+                    dispatch(openDialogCreateCustomApp({}));
                   } else if (sectionKey === 'updates') {
                     dispatch(changeRoute(ROUTE_INSTALLED));
                   } else if (sectionKey === 'preferences') {

@@ -272,23 +272,11 @@ const loadListeners = () => {
               return installAppAsync(id, name, url, icon, opts);
             })
             .then((newApp) => {
-              let displayedIcon;
-              // display latest icon from WebCatalog
-              if (!id.startsWith('custom-')) {
-                if (process.platform === 'win32') {
-                  displayedIcon = `https://cdn-1.webcatalog.io/catalog/${id}/${id}-icon-unplated-128.webp`;
-                } else {
-                  displayedIcon = `https://cdn-1.webcatalog.io/catalog/${id}/${id}-icon-128.webp`;
-                }
-              }
-
               send(e.sender, 'set-app', id, {
                 ...newApp,
                 status: 'INSTALLED',
                 lastUpdated: new Date().getTime(),
                 registered: getPreference('registered'),
-                // ensure fresh icon from the catalog is shown
-                icon128: displayedIcon,
               });
             })
             .catch((error) => {

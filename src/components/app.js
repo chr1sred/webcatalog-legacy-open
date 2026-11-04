@@ -9,7 +9,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from './root/container';
 
 import DialogAbout from './dialogs/dialog-about';
-import DialogCatalogAppDetails from './dialogs/dialog-catalog-app-details';
 import DialogCreateCustomApp from './dialogs/dialog-create-custom-app';
 import DialogEditApp from './dialogs/dialog-edit-app';
 import DialogBackupRestore from './dialogs/dialog-backup-restore';
@@ -71,7 +70,6 @@ const App = () => {
       <SnackbarTrigger />
 
       <DialogAbout />
-      <DialogCatalogAppDetails />
       <DialogCreateCustomApp />
       <DialogEditApp />
       <DialogBackupRestore />

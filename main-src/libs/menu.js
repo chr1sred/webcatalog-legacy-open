@@ -174,19 +174,11 @@ const createMenu = () => {
       submenu: [
         {
           label: 'WebCatalog Open Help',
-          click: () => shell.openExternal('https://docs.webcatalog.io?utm_source=webcatalog_app'),
+          click: () => shell.openExternal('https://github.com/chr1sred/webcatalog-legacy-open#readme'),
         },
         {
-          label: 'Request New Features',
-          click: () => shell.openExternal('https://github.com/webcatalog/webcatalog-app/issues/new?template=feature.md&title=feature%3A+'),
-        },
-        {
-          label: 'Submit New App to Catalog',
-          click: () => shell.openExternal('https://forms.gle/redZCVMwkuhvuDtb9'),
-        },
-        {
-          label: 'Learn More',
-          click: () => shell.openExternal('https://webcatalog.io/webcatalog/?utm_source=webcatalog_app'),
+          label: 'Report an Issue or Request a Feature',
+          click: () => shell.openExternal('https://github.com/chr1sred/webcatalog-legacy-open/issues/new'),
         },
         { type: 'separator' },
         {

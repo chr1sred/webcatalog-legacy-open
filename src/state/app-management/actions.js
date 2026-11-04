@@ -10,8 +10,6 @@ import {
   SORT_APPS,
 } from '../../constants/actions';
 
-import appSearch from '../../app-search';
-
 import {
   isNameExisted,
   getOutdatedAppsAsList,
@@ -88,28 +86,6 @@ export const updateApp = (
   // for backward compatibility
   if (semver.lt(version, '14.0.0')) {
     opts.legacyUserData = true;
-  }
-
-  if (window.process.platform === 'linux'
-    && !id.startsWith('custom-')
-    && opts.category == null) {
-    await appSearch
-      .search('', {
-        filters: {
-          id: [id],
-        },
-        result_fields: {
-          category: { raw: {} },
-        },
-      })
-      .then((res) => {
-        const app = res.rawResults[0];
-        opts.category = app.category.raw;
-      })
-      .catch((err) => {
-        // eslint-disable-next-line no-console
-        console.log(err);
-      });
   }
 
   requestUpdateApp(id, name, url, icon, opts, applyIconTemplate);

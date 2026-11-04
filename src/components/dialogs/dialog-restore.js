@@ -28,9 +28,8 @@ import EnhancedDialogTitle from '../shared/enhanced-dialog-title';
 import { close } from '../../state/dialog-restore/actions';
 import getAssetPath from '../../helpers/get-asset';
 import { APP_DETAILS_FILENAME, APP_IMAGES_FOLDERNAME } from '../../constants/backups';
-import { requestInstallApp, requestInstallAppWithIconData } from '../../senders';
+import { requestInstallAppWithIconData } from '../../senders';
 import getFilename from '../../helpers/get-filename';
-import isCustomApp from '../../helpers/is-custom-app';
 
 const useStyle = makeStyles((theme) => ({
   dialogBody: {
@@ -87,28 +86,20 @@ const DialogRestore = () => {
     const appDetailsContent = await JSZip.loadAsync(fileBlob);
     const appDetailsRes = await appDetailsContent.files[APP_DETAILS_FILENAME].async('text');
     const appDetailsData = JSON.parse(appDetailsRes)
-      .map(([appKey, appInfo]) => {
-        if (isCustomApp(appKey)) {
-          return [appKey, appInfo];
-        }
-        return [appKey, {
-          ...appInfo,
-          icon: `https://cdn-1.webcatalog.io/catalog/${appKey}/${appKey}-icon.png`,
-        }];
+      // backups made by older versions may reference catalog icons that are no longer available
+      .filter(([, appInfo]) => {
+        const iconFilename = `${appInfo.name}-${getFilename(appInfo.icon)}`;
+        return Boolean(appDetailsContent.files[`${APP_IMAGES_FOLDERNAME}/${iconFilename}`]);
       });
 
     // Caching custom app images
     const appIconsData = await Promise.all(appDetailsData.map(async ([appKey, appInfo]) => {
-      if (isCustomApp(appKey)) {
-        const { name, icon } = appInfo;
-        const iconFilename = `${name}-${getFilename(icon)}`;
-        const iconFilePath = `${APP_IMAGES_FOLDERNAME}/${iconFilename}`;
-        const iconData = await appDetailsContent.files[iconFilePath].async('uint8array');
+      const { name, icon } = appInfo;
+      const iconFilename = `${name}-${getFilename(icon)}`;
+      const iconFilePath = `${APP_IMAGES_FOLDERNAME}/${iconFilename}`;
+      const iconData = await appDetailsContent.files[iconFilePath].async('uint8array');
 
-        return { [appKey]: { iconFilename, iconData } };
-      }
-
-      return { };
+      return { [appKey]: { iconFilename, iconData } };
     }));
 
     let newAppIconsData = { };
@@ -144,16 +135,12 @@ const DialogRestore = () => {
       });
 
     selectedAppsData.forEach(([appKey, appInfo]) => {
-      const { id, name, url, icon, opts } = appInfo;
+      const { id, name, url, opts } = appInfo;
 
       if (!installedApps.includes(appKey)) {
-        if (isCustomApp(appKey)) {
-          const { iconFilename, iconData } = customAppsIconData[appKey];
+        const { iconFilename, iconData } = customAppsIconData[appKey];
 
-          requestInstallAppWithIconData(id, name, url, iconFilename, iconData, opts);
-        } else {
-          requestInstallApp(id, name, url, icon, opts);
-        }
+        requestInstallAppWithIconData(id, name, url, iconFilename, iconData, opts);
       }
     });
 
@@ -181,15 +168,11 @@ const DialogRestore = () => {
     }
   };
 
-  const getAppIconSrc = (appKey, icon) => {
-    if (isCustomApp(appKey)) {
-      const iconUInt8Data = customAppsIconData[appKey]?.iconData;
-      const base64Str = Buffer.from(iconUInt8Data).toString('base64') || '';
+  const getAppIconSrc = (appKey) => {
+    const iconUInt8Data = customAppsIconData[appKey]?.iconData;
+    const base64Str = Buffer.from(iconUInt8Data).toString('base64') || '';
 
-      return `data:image/png;base64, ${base64Str}`;
-    }
-
-    return getAssetPath(icon);
+    return `data:image/png;base64, ${base64Str}`;
   };
 
   return (
@@ -240,7 +223,7 @@ const DialogRestore = () => {
                     onClick={onAppSelected(appIndex)}
                   >
                     <ListItemAvatar>
-                      <Avatar src={getAppIconSrc(appKey, appInfo.icon)} />
+                      <Avatar src={getAppIconSrc(appKey)} />
                     </ListItemAvatar>
                     <ListItemText
                       id={appKey}

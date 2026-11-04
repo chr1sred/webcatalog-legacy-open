@@ -32,7 +32,7 @@ const defaultPreferences = {
   attachToMenubar: false,
   createDesktopShortcut: true,
   createStartMenuShortcut: true,
-  defaultHome: 'home',
+  defaultHome: 'installed',
   installationPath: getDefaultInstallationPath(),
   // all features are unlocked (kept for compatibility with generated apps)
   registered: true,
@@ -66,6 +66,9 @@ const updateSharedPreferencesAsync = () => {
 
 const initCachedPreferences = () => {
   cachedPreferences = { ...defaultPreferences, ...settings.getSync(`preferences.${v}`) };
+
+  // the catalog (old 'home' page) no longer exists
+  if (cachedPreferences.defaultHome === 'home') cachedPreferences.defaultHome = 'installed';
 
   // all features are always unlocked
   cachedPreferences.registered = true;

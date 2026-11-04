@@ -9,13 +9,14 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 
 import CloseIcon from '@material-ui/icons/Close';
 
 import { close } from '../../../../state/dialog-add-space/actions';
 
-import Home from './home';
+import CreateCustomSpaceCard from './create-custom-space-card';
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -46,7 +47,11 @@ const DialogAddSpace = () => {
         </IconButton>
       </DialogTitle>
       <DialogContent dividers>
-        {open && <Home />}
+        {open && (
+          <Grid container spacing={1}>
+            <CreateCustomSpaceCard />
+          </Grid>
+        )}
       </DialogContent>
     </Dialog>
   );

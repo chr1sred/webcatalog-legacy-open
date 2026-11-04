@@ -9,7 +9,6 @@ import { useSelector } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 
 import {
-  ROUTE_HOME,
   ROUTE_INSTALLED,
   ROUTE_PREFERENCES,
   ROUTE_SPACES,
@@ -17,7 +16,6 @@ import {
 
 import Preferences from '../pages/preferences';
 import Installed from '../pages/installed';
-import Home from '../pages/home';
 import Spaces from '../pages/spaces';
 
 import Sidebar from './sidebar';
@@ -70,7 +68,6 @@ const Container = () => {
         {route === ROUTE_INSTALLED && <Installed />}
         {route === ROUTE_SPACES && <Spaces />}
         {route === ROUTE_PREFERENCES && <Preferences />}
-        {route === ROUTE_HOME && <Home />}
       </Grid>
     </div>
   );

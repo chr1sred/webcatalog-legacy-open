@@ -33,7 +33,6 @@ import {
   close,
   save,
   getIconFromInternet,
-  getIconFromAppSearch,
   updateForm,
   updateFormOpts,
 } from '../../state/dialog-edit-app/actions';
@@ -220,16 +219,6 @@ const DialogEditApp = () => {
                 onClick={() => dispatch(getIconFromInternet())}
               >
                 {downloadingIcon ? 'Downloading...' : 'Download Icon from URL'}
-              </Button>
-              <br />
-              <Button
-                variant="outlined"
-                size="small"
-                className={classes.buttonBot}
-                disabled={Boolean(!url || urlError || urlDisabled || downloadingIcon)}
-                onClick={() => dispatch(getIconFromAppSearch())}
-              >
-                {downloadingIcon ? 'Downloading...' : 'Download Icon from Catalog'}
               </Button>
               <br />
               <Button

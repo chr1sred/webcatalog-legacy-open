@@ -4,7 +4,6 @@
 import { combineReducers } from 'redux';
 
 import {
-  ROUTE_HOME,
   ROUTE_INSTALLED,
   ROUTE_SPACES,
   ROUTE_PREFERENCES,
@@ -29,7 +28,7 @@ switch (getPreference('defaultHome')) {
     break;
   }
   default: {
-    defaultRoute = ROUTE_HOME;
+    defaultRoute = ROUTE_INSTALLED;
   }
 }
 

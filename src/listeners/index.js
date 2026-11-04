@@ -16,7 +16,6 @@ import { setSystemPreference } from '../state/system-preferences/actions';
 import { open as openDialogAbout } from '../state/dialog-about/actions';
 import { open as openDialogBackup } from '../state/dialog-backup/actions';
 import { open as openDialogRestore } from '../state/dialog-restore/actions';
-import { open as openDialogCatalogAppDetails } from '../state/dialog-catalog-app-details/actions';
 import { updateUpdater } from '../state/updater/actions';
 import {
   updateInstallationProgress,
@@ -94,10 +93,6 @@ const loadListeners = (store) => {
 
   ipcRenderer.on('set-scanning-for-installed', (e, scanning) => {
     store.dispatch(setScanningForInstalled(scanning));
-  });
-
-  ipcRenderer.on('open-dialog-catalog-app-details', (e, appId) => {
-    store.dispatch(openDialogCatalogAppDetails(appId));
   });
 
   ipcRenderer.on('set-is-full-screen', (e, isFullScreen) => {

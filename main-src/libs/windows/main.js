@@ -57,7 +57,7 @@ const createAsync = () => new Promise((resolve) => {
 
     const trayContextMenu = Menu.buildFromTemplate([
       {
-        label: 'Open WebCatalog Open',
+        label: 'Show WebCatalog Open',
         click: () => get().show(),
       },
       {

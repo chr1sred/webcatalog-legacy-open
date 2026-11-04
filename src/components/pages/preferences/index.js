@@ -24,7 +24,6 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import PowerIcon from '@material-ui/icons/Power';
 import RotateLeftIcon from '@material-ui/icons/RotateLeft';
-import SecurityIcon from '@material-ui/icons/Security';
 import UpdateIcon from '@material-ui/icons/Update';
 import WidgetsIcon from '@material-ui/icons/Widgets';
 import OfflinePinIcon from '@material-ui/icons/OfflinePin';
@@ -329,7 +328,6 @@ const Preferences = () => {
                   }}
                   className={classnames(classes.selectRoot, classes.selectRootExtraMargin)}
                 >
-                  <MenuItem dense value="home">Catalog</MenuItem>
                   <MenuItem dense value="spaces">Spaces</MenuItem>
                   <MenuItem dense value="installed">Installed</MenuItem>
                   <MenuItem dense value="preferences">Settings</MenuItem>

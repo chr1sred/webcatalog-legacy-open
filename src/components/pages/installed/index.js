@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import PropTypes from 'prop-types';
 
+import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
@@ -25,6 +26,7 @@ import DefinedAppBar from './defined-app-bar';
 import Toolbar from './toolbar';
 
 import { updateScrollOffset } from '../../../state/installed/actions';
+import { open as openDialogCreateCustomApp } from '../../../state/dialog-create-custom-app/actions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -175,14 +177,23 @@ const Installed = () => {
     return (
       <EmptyState
         icon={GetAppIcon}
-        title="No Installed Apps"
+        title="No Apps Yet"
       >
         <Typography
           variant="subtitle1"
           align="center"
         >
-          Your installed apps on this machine will show up here.
+          Turn any website into a desktop app. Your apps will show up here.
         </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          disableElevation
+          className={classes.noMatchingResultOpts}
+          onClick={() => dispatch(openDialogCreateCustomApp({}))}
+        >
+          Create your first app
+        </Button>
       </EmptyState>
     );
   };

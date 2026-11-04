@@ -24,7 +24,6 @@ import EnhancedDialogTitle from '../shared/enhanced-dialog-title';
 import { close } from '../../state/dialog-backup/actions';
 import getAssetPath from '../../helpers/get-asset';
 import getFilename from '../../helpers/get-filename';
-import isCustomApp from '../../helpers/is-custom-app';
 import {
   APP_DETAILS_FILENAME,
   APP_DETAILS_ZIP_FILENAME,
@@ -66,30 +65,21 @@ const DialogBackup = () => {
       .map(([appKey, appInfo]) => {
         const { id, name, url, icon, opts } = appInfo;
 
-        if (!isCustomApp(appKey)) {
-          const filePosfix = window.process.platform === 'win32' ? '-unplated.png' : '.png';
-          const iconUrl = `https://cdn-1.webcatalog.io/catalog/${appKey}/${appKey}-icon${filePosfix}`;
-
-          return [appKey, { id, name, url, icon: iconUrl, opts }];
-        }
-
         return [appKey, { id, name, url, icon, opts }];
       });
 
     zip.file(APP_DETAILS_FILENAME, JSON.stringify(selectedAppsData));
 
     await Promise.all(selectedAppsData.map(async ([appKey, appInfo]) => {
-      if (isCustomApp(appKey)) {
-        const { name, icon } = appInfo;
-        const iconFilename = `${name}-${getFilename(icon)}`;
+      const { name, icon } = appInfo;
+      const iconFilename = `${name}-${getFilename(icon)}`;
 
-        // eslint-disable-next-line no-undef
-        const fileResponse = await fetch(getAssetPath(icon));
-        const fileResponseBody = await fileResponse.body;
-        const dataStream = await fileResponseBody.getReader().read();
+      // eslint-disable-next-line no-undef
+      const fileResponse = await fetch(getAssetPath(icon));
+      const fileResponseBody = await fileResponse.body;
+      const dataStream = await fileResponseBody.getReader().read();
 
-        imagesFolder.file(iconFilename, dataStream.value, { base64: true });
-      }
+      imagesFolder.file(iconFilename, dataStream.value, { base64: true });
     }));
 
     const zipFileBlob = await zip.generateAsync({ type: 'blob' });
